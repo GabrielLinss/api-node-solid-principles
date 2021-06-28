@@ -1,5 +1,6 @@
 import { uuid } from 'uuidv4'
-import { Entity, Column, PrimaryColumn, BaseEntity } from 'typeorm'
+import { Entity, Column, PrimaryColumn, BaseEntity, BeforeInsert, BeforeUpdate } from 'typeorm'
+import bcrypt from 'bcryptjs'
 
 @Entity({ name: 'users' })
 export class User extends BaseEntity {
@@ -15,8 +16,14 @@ export class User extends BaseEntity {
   @Column()
   public password: string;
 
+  @BeforeInsert()
+  @BeforeUpdate()
+  hashPassword() {
+    this.password = bcrypt.hashSync(this.password, 10)
+  }
+
   constructor(
-    props: Omit<User, 'id' | 'hasId' | 'save' | 'remove' | 'softRemove' | 'recover' | 'reload'>,
+    props: Omit<User, 'id' | 'hasId' | 'save' | 'remove' | 'softRemove' | 'recover' | 'reload' | 'hashPassword'>,
     id?: string
   ) {
     super();

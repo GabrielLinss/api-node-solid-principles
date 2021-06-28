@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import { CreateUserUseCase } from "./CreateUserUseCase";
-import bcryptjs from 'bcryptjs'
 
 export class CreateUserController {
   constructor(
@@ -14,7 +13,7 @@ export class CreateUserController {
       await this.createUserUseCase.execute({
         name,
         email,
-        password: bcryptjs.hashSync(password, 10)
+        password
       })
   
       return response.status(201).send();  
